@@ -153,6 +153,9 @@ function attackRoll(baseAttackBonus, tempAttackBonus, tempDmgBonus, otherAttackB
                 alias: selected_actor.name
             }, flavor: `Critical Hit Confirmation:`
         });
+        // Crit Table auswürfeln
+        let table = game.tables.entities.find(t => t.name === "Critical_Physical");
+        table.draw();
         rollDmg = true;
         crit = true;
     // normale Attack auswürfeln
