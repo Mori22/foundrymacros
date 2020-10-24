@@ -1,5 +1,6 @@
 // Basisdaten festlegen (kann vermutlich später auch über auslesen der Charakterwerte gemacht werden)
-let BAB = 15;
+player_data=game.actors.get("N2TmM4J1YTk8U2Gq") //ID kann im Browser in der Konsole über game.actors ermittelt werden
+let BAB = player_data.data.data.attributes.bab.total;
 let oAttackBonus = 9;
 let bDmgBonus = 6;
 let cRange = 19;
@@ -34,12 +35,11 @@ new Dialog({
                 let bolGB = html.find("#bolGB")[0].checked;
                 let bolGS = html.find("#bolGS")[0].checked;
                 // Aktuellen Charakter auslesen
-                let selected = canvas.tokens.controlled;
-                let selected_actor = selected[0].actor;
+                player_data=game.actors.get("N2TmM4J1YTk8U2Gq")
                 // Start der Attacke im Chat anzeigen
                 ChatMessage.create({
                     speaker: {
-                        alias: selected_actor.name
+                        alias: player_data.data.name
                     },
                     content: `== Neue Fullattack==`,
                 })
@@ -92,8 +92,7 @@ function fullAttack(baseAttackBonus, tempAttackBonus, tempDmgBonus, otherAttackB
 // Funktion zum auswürfeln der einzelnen Attacken
 function attackRoll(baseAttackBonus, tempAttackBonus, tempDmgBonus, otherAttackBonus, baseDmgBonus, bolMS, bolGB, critRange, critMulti, attackNumber) {
     // Aktuellen Spieler auswählen -> hier gibt es ggf. bessere Lösung
-    let selected = canvas.tokens.controlled;
-    let selected_actor = selected[0].actor;
+    player_data=game.actors.get("N2TmM4J1YTk8U2Gq")
     // Summe des Attack und Dmg Bonus ermitteln
     let attackBonus = baseAttackBonus + tempAttackBonus + otherAttackBonus;
     let dmgBonus = tempDmgBonus + baseDmgBonus;
@@ -114,13 +113,13 @@ function attackRoll(baseAttackBonus, tempAttackBonus, tempDmgBonus, otherAttackB
         //  FUMBLE
         attackRollDie.toMessage({
             speaker: {
-                alias: selected_actor.name
+                alias: player_data.data.name
             }, flavor: `Possible Fumble on Attack ${attackNumber}:`
         });
         let fumbelRollDie = new Roll(attackRollString);
         fumbelRollDie.toMessage({
             speaker: {
-                alias: selected_actor.name
+                alias: player_data.data.name
             }, flavor: `Fumble Confirmation:`
         });
     // Roll für Wurf in Crit Range durchführen
@@ -128,13 +127,13 @@ function attackRoll(baseAttackBonus, tempAttackBonus, tempDmgBonus, otherAttackB
         //  Crit
         attackRollDie.toMessage({
             speaker: {
-                alias: selected_actor.name
+                alias: player_data.data.name
             }, flavor: `Possible Critical Hit on Attack ${attackNumber}:`
         });
         let critRollDie = new Roll(attackRollString);
         critRollDie.toMessage({
             speaker: {
-                alias: selected_actor.name
+                alias: player_data.data.name
             }, flavor: `Critical Hit Confirmation:`
         });
         rollDmg = true;
@@ -144,13 +143,13 @@ function attackRoll(baseAttackBonus, tempAttackBonus, tempDmgBonus, otherAttackB
         //  Natural Crit
         attackRollDie.toMessage({
             speaker: {
-                alias: selected_actor.name
+                alias: player_data.data.name
             }, flavor: `Natural Critical Hit on Attack ${attackNumber}:`
         });
         let critRollDie = new Roll(attackRollString);
         critRollDie.toMessage({
             speaker: {
-                alias: selected_actor.name
+                alias: player_data.data.name
             }, flavor: `Critical Hit Confirmation:`
         });
         // Crit Table auswürfeln
@@ -163,7 +162,7 @@ function attackRoll(baseAttackBonus, tempAttackBonus, tempDmgBonus, otherAttackB
         //  Hit?
         attackRollDie.toMessage({
             speaker: {
-                alias: selected_actor.name
+                alias: player_data.data.name
             }, flavor: `Normal Hit on Attack ${attackNumber}:`
         });
         rollDmg = true;
@@ -185,7 +184,7 @@ function attackRoll(baseAttackBonus, tempAttackBonus, tempDmgBonus, otherAttackB
                 let dmgRollDie = new Roll(dmgRollString);
                 dmgRollDie.toMessage({
                     speaker: {
-                        alias: selected_actor.name
+                        alias: player_data.data.name
                     }, flavor: `Damage for Attack ${attackNumber} (Crit Dmg Roll ${attackNr} of ${critMulti}):`
                 });
                 totalDmg = totalDmg + dmgRollDie.total
@@ -194,7 +193,7 @@ function attackRoll(baseAttackBonus, tempAttackBonus, tempDmgBonus, otherAttackB
             let dmgRollDie = new Roll(dmgRollString);
             dmgRollDie.toMessage({
                 speaker: {
-                    alias: selected_actor.name
+                    alias: player_data.data.name
                 }, flavor: `Damage for Attack ${attackNumber}:`
             });
             totalDmg = totalDmg + dmgRollDie.total
